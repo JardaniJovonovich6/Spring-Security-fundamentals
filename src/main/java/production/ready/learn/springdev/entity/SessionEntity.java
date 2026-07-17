@@ -7,7 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
-
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
@@ -20,7 +20,7 @@ public class SessionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String refreshtoken;
+    private String refreshToken;
 
     @Column(unique = true)
     @CreationTimestamp

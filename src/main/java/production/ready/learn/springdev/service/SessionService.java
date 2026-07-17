@@ -45,7 +45,7 @@ public class SessionService {
 
         log.info("Building new Session.........");
         SessionEntity newsession  = SessionEntity.builder()
-                .refreshtoken(refreshToken)
+                .refreshToken(refreshToken)
                 .user(user)
                 .build();
 
@@ -60,18 +60,13 @@ public class SessionService {
         log.info("Validating the Session...................");
         log.info("findding session using refreshtoken");
 
-        SessionEntity sessionEntity = sessionRepository.findbyRefreshToken(refreshToken);
+        SessionEntity sessionEntity = sessionRepository.findByrefreshToken(refreshToken).orElseThrow(() -> new SessionAuthenticationException("Session for the Token : \" + refreshToken + \" was not found........"));
+        log.info("changing or validating the LastUsedAt of the session to the current time............");
+        sessionEntity.setLastUsedAt(LocalDateTime.now());
+        log.info("Session with changed time is done and saved");
+        sessionRepository.save(sessionEntity);
+        log.info("Session is saved used validateSession method in SessionService");
 
-        if(sessionEntity == null){
-            throw new SessionAuthenticationException("Session for the Token : " + refreshToken + " was not found........");
-        }else {
-
-            log.info("changing or validating the LastUsedAt of the session to the current time............");
-            sessionEntity.setLastUsedAt(LocalDateTime.now());
-            log.info("Session with changed time is done and saved");
-            sessionRepository.save(sessionEntity);
-            log.info("Session is saved used validateSession method in SessionService");
-        }
 
 
     }
