@@ -1,3 +1,6 @@
+spring.config.import: optional:file:.env[.properties]
+
+
 spring:
   application:
     name: springdev
@@ -17,6 +20,15 @@ spring:
       hibernate:
         format_sql: true
 
+  spring:
+    security:
+      oauth2:
+        client:
+          registration:
+            google:
+              client-id: ${GOOGLE_CLIENT_ID}
+              client-secret: ${GOOGLE_CLIENT_SECRET}
+
 
 #  security:
 #    user:
@@ -26,5 +38,5 @@ spring:
 
 
 jwt:
-  secretKey : h34b5h4b545JHBNSDFVJHB3U4HBL3IHJ4BT3Btb45ty34btrb3478b
+  secretKey : ${JWT_SECRET_KEY}
 
