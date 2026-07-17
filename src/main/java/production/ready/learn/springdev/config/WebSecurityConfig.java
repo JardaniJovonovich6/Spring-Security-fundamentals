@@ -20,6 +20,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import production.ready.learn.springdev.filter.JwtAuthFilter;
+import production.ready.learn.springdev.handler.OAuth2SuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -27,19 +28,24 @@ import production.ready.learn.springdev.filter.JwtAuthFilter;
 public class WebSecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity){
         httpSecurity
                 .authorizeHttpRequests(auth -> auth
 
-                        .requestMatchers("/auth/**" , "/posts").permitAll()
+                        .requestMatchers("/auth/**" , "/posts" , "/home.html").permitAll()
 //                        .requestMatchers("/posts/**").hasAnyRole("ADMIN")
 
                         .anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthFilter , UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter , UsernamePasswordAuthenticationFilter.class)
+                .oauth2Login(oauth2config ->
+                        oauth2config.failureUrl("/login?error=true")
+                                .successHandler(oAuth2SuccessHandler)
+                );
 //                .formLogin(Customizer.withDefaults();
 
         return httpSecurity.build();

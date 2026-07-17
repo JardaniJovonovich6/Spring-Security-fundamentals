@@ -42,6 +42,10 @@ public class UserService implements UserDetailsService {
         return modelMapper.map(userRepository.findById(userid).orElseThrow(() -> new ResourceNotFoundException("Resource with the ID " + userid + " was not found..........") ) , User.class);
     }
 
+    public User getuserbyemail(String email){
+        return userRepository.findByEmail(email).orElse(null);
+    }
+
     public Userdto signup(SignUpdto signUpdto) {
 
         Optional<User> optionalbox = userRepository.findByEmail(signUpdto.getEmail());
@@ -59,5 +63,10 @@ public class UserService implements UserDetailsService {
 
     }
 
+    public User save(User newuser) {
+
+        return userRepository.save(newuser);
+
     }
+}
 

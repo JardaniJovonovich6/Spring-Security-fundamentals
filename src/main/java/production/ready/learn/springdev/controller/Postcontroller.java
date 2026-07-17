@@ -31,4 +31,6 @@ public class Postcontroller {
     public Postdto createnewpost(@RequestBody Postdto inputpost){
         return postService.createposts(inputpost);
     }
+
+
 }

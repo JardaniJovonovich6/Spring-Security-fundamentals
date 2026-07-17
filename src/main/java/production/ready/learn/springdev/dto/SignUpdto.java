@@ -10,6 +10,6 @@ public class SignUpdto {
 
     private String name;
     private String email;
-    private String password ;
+    private String password;
 
 }
