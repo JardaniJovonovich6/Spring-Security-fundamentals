@@ -32,5 +32,12 @@ public class Postcontroller {
         return postService.createposts(inputpost);
     }
 
+    @PutMapping(path = "/update")
+    public Postdto updateposts(@RequestBody Postdto inputupdateposts ){
+
+        return postService.updatepostbyid(inputupdateposts.getPostid() , inputupdateposts);
+
+    }
+
 
 }
