@@ -4,6 +4,7 @@ package production.ready.learn.springdev.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -19,8 +20,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import production.ready.learn.springdev.entity.enums.Roles;
 import production.ready.learn.springdev.filter.JwtAuthFilter;
 import production.ready.learn.springdev.handler.OAuth2SuccessHandler;
+
+import static production.ready.learn.springdev.entity.enums.Roles.*;
 
 @Configuration
 @EnableWebSecurity
@@ -29,15 +33,18 @@ public class WebSecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private static final String[] publicRoutes = {"/auth/**" , "/home.html"};
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity){
         httpSecurity
                 .authorizeHttpRequests(auth -> auth
 
-                        .requestMatchers("/auth/**" , "/posts" , "/home.html").permitAll()
-//                        .requestMatchers("/posts/**").hasAnyRole("ADMIN")
-
+                        .requestMatchers(publicRoutes).permitAll()
+                        .requestMatchers(HttpMethod.GET , "/posts/**").permitAll()
+                        .requestMatchers(HttpMethod.POST , "/posts/**")
+                            .hasAnyRole(ADMIN.name() , CREATOR.name())
+                        .requestMatchers(HttpMethod.PUT , "/posts/**").hasRole(EDITOR.name())
                         .anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

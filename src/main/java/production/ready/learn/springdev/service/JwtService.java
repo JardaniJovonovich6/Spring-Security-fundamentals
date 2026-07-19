@@ -23,11 +23,13 @@ public class JwtService {
         return Keys.hmacShaKeyFor(jwtSecretToken.getBytes(StandardCharsets.UTF_8));
     }
 
+    //This Generates a Token for the New user usually ,
+    // also the when a User needed a AcessToken we generate using this function
     public String generateAccessToken(User user){
         return Jwts.builder()
                 .subject(user.getId().toString())
                 .claim("email" , user.getEmail())
-                .claim("roles" , Set.of("ADMIN" , "USER" , "MANAGER"))
+                .claim("roles" , user.getRoles().toString())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 60000))
                 .signWith(getSecretKey())
@@ -35,6 +37,8 @@ public class JwtService {
 
     }
 
+    //This is a Session contorlling Token based for 2 token session System ,
+    // this is generated when Session is expired for the User
     public String generateRefreshToken(User user){
         return Jwts.builder()
                 .subject(user.getId().toString())
@@ -45,6 +49,8 @@ public class JwtService {
 
     }
 
+    //used for authentication purpose when we need to get ID from the token
+    // given from the Response to the server to verify the JWT token and to maintain security
     public Long getUserIdFromToken(String token){
         Claims claims = Jwts.parser()
                 .verifyWith(getSecretKey())
