@@ -20,10 +20,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import production.ready.learn.springdev.entity.enums.Roles;
+import production.ready.learn.springdev.entity.enums.PERMISSIONS;
+import production.ready.learn.springdev.entity.enums.PERMISSIONS.*;
+import production.ready.learn.springdev.entity.enums.Roles.*;
 import production.ready.learn.springdev.filter.JwtAuthFilter;
 import production.ready.learn.springdev.handler.OAuth2SuccessHandler;
 
+import static production.ready.learn.springdev.entity.enums.PERMISSIONS.*;
 import static production.ready.learn.springdev.entity.enums.Roles.*;
 
 @Configuration
@@ -41,10 +44,14 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
 
                         .requestMatchers(publicRoutes).permitAll()
-                        .requestMatchers(HttpMethod.GET , "/posts/**").permitAll()
-                        .requestMatchers(HttpMethod.POST , "/posts/**")
-                            .hasAnyRole(ADMIN.name() , CREATOR.name())
-                        .requestMatchers(HttpMethod.PUT , "/posts/**").hasRole(EDITOR.name())
+                        .requestMatchers(HttpMethod.GET ,"/posts/**").hasAnyRole(USER.name() , ADMIN.name() , CREATOR.name() , EDITOR.name() )
+                        .requestMatchers(HttpMethod.GET ,"/posts/**").hasAnyAuthority(POST_VIEW.name())
+                        .requestMatchers(HttpMethod.POST ,"/posts/**").hasAnyRole(ADMIN.name() , CREATOR.name()  )
+                        .requestMatchers(HttpMethod.POST ,"/posts/**").hasAnyAuthority(POST_CREATE.name())
+                        .requestMatchers(HttpMethod.PUT ,"/posts/**").hasAnyRole(ADMIN.name() , EDITOR.name()  )
+                        .requestMatchers(HttpMethod.PUT ,"/posts/**").hasAuthority(POST_UPDATE.name())
+
+
                         .anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
