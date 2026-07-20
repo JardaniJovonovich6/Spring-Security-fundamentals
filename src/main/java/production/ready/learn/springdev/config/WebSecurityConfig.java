@@ -48,11 +48,11 @@ public class WebSecurityConfig {
                         .anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthFilter , UsernamePasswordAuthenticationFilter.class)
-                .oauth2Login(oauth2config ->
-                        oauth2config.failureUrl("/login?error=true")
-                                .successHandler(oAuth2SuccessHandler)
-                );
+                .addFilterBefore(jwtAuthFilter , UsernamePasswordAuthenticationFilter.class);
+//                .oauth2Login(oauth2config ->
+//                        oauth2config.failureUrl("/login?error=true")
+//                                .successHandler(oAuth2SuccessHandler)
+//                );
 //                .formLogin(Customizer.withDefaults();
 
         return httpSecurity.build();
