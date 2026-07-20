@@ -39,7 +39,7 @@ public class WebSecurityConfig {
     private static final String[] publicRoutes = {"/auth/**" , "/home.html"};
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity){
+    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
         httpSecurity
                 .authorizeHttpRequests(auth -> auth
 
