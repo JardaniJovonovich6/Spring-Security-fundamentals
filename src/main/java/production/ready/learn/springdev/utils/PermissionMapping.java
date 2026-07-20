@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 import static production.ready.learn.springdev.entity.enums.PERMISSIONS.*;
 import static production.ready.learn.springdev.entity.enums.Roles.*;
 
+
+//FIXED NO ISSUES HERE
 public class PermissionMapping{
 
     private static final Map<Roles , Set<PERMISSIONS>> map = Map.of(
